@@ -1,0 +1,92 @@
+---
+title: "EDS223 Homework 1"
+author: "Sofia Sarak"
+format: pdf
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(sf)
+library(here)
+library(tmap)
+```
+
+
+```{r}
+# read in geodatabase of EJScreen data at the Census Block Group level
+ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"))
+```
+
+
+```{r}
+# filter to a state you are interested in
+ct <- ejscreen %>%
+  dplyr::filter(ST_ABBREV == "CT")
+```
+
+
+```{r}
+# filter to a county you are interested in
+fairfield <- ejscreen %>%
+  dplyr::filter(CNTY_NAME %in% c("Fairfield County"))
+```
+
+
+```{r}
+# find the average values for all variables within counties
+ct_counties <- aggregate(ct, by = list(ct$CNTY_NAME), FUN = mean, na.rm = TRUE)
+
+```
+
+
+
+```{r}
+
+
+tm_shape(ct) +
+  tm_fill("PEOPCOLORPCT")
+```
+
+```{r}
+tm_shape(ct) +
+  tm_fill("RSEI_AIR")
+```
+```{r}
+nh <- ejscreen %>%
+  dplyr::filter(CNTY_NAME %in% c("New Haven County"))
+```
+
+```{r}
+tm_shape(nh) +
+  tm_fill("RSEI_AIR")
+```
+```{r}
+tm_shape(nh) +
+  tm_fill("PEOPCOLORPCT")
+```
+
+```{r}
+ny <- ejscreen %>%
+  dplyr::filter(ST_ABBREV == "NY")
+```
+
+```{r}
+bronx <- ejscreen %>%
+  dplyr::filter(CNTY_NAME %in% c("Bronx County"))
+```
+
+```{r}
+tm_shape(bronx) +
+  tm_fill("PEOPCOLORPCT")
+```
+
+```{r}
+tm_shape(bronx) +
+  tm_fill("D2_PM25")
+```
+```{r}
+tm_shape(bronx) +
+  tm_fill("LOWINCPCT")
+```
+
