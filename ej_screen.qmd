@@ -7,6 +7,8 @@ execute:
   messages: false
 ---
 
+The following document contains visualizations of environmental justice issues in The Bronx, New York.
+
 ### Loading in Necessary Packages
 
 ```{r}
@@ -18,15 +20,15 @@ library(tmap)
 library(dplyr)
 ```
 
-## Wrangling of Data
+## Reading in and Wrangling of Data
 
 ```{r}
 # Using sf package to read in geodatabase of EJScreen data at the Census Block Group level
-ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"))
+ejscreen <- st_read(here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"))
 ```
 
 ```{r}
-# Filtering for New York data
+# Filtering for New York State data
 ny <- ejscreen %>%
   filter(ST_ABBREV == "NY")
 ```
@@ -43,7 +45,10 @@ dim(bronx)
 
 ## Mapping
 
+Mapping PM2.5 Concentration
+
 ```{r}
+# Using the tmap package to map the 'D2_PM25' column of the bronx data frame
 tm_shape(bronx) +
   tm_fill("D2_PM25",
           fill.legend = tm_legend(title = "PM2.5 EJ Index"),
@@ -54,6 +59,8 @@ tm_shape(bronx) +
   tm_layout(bg.color = "grey97")
 ```
 
+Mapping Low Income Percentage
+
 ```{r}
 # Mutating the low income percentage column ('LOWINPCT')
 # As the current values are proportions, not percentages
@@ -62,6 +69,7 @@ bronx$LOWINCPCT <- bronx$LOWINCPCT * 100
 ```
 
 ```{r}
+# Using the tmap package to map the mutated 'LOWINCPCT' column of the bronx data frame
 tm_shape(bronx) +
   tm_fill("LOWINCPCT",
           fill.legend = tm_legend(title = "% Low Income"),
@@ -76,15 +84,16 @@ tm_shape(bronx) +
 
 These maps provide visualizations of EJ Screen's environmental justice data at a Census Block Group Level (which are the delineations visible in each map). The area of interest -- The Bronx, New York -- is one of the five boroughs of New York City; it contains the poorest congressional district in the United States and has recently experienced threats to it environmental justice funding ([Seattle Times article](https://www.seattletimes.com/business/in-the-bronx-the-nations-poorest-congressional-district-federal-funding-cuts-create-perfect-storm/#:~:text=Why%20the%20Bronx%20bears%20the,support%20just%20gets%20yanked%20away.%E2%80%9D)). Here, we have plotted particulate matter 2.5 concentrations and the percentage of low income residents in the area.
 
-Particulate Matter 2.5 is the \_\_\_\_, and is known to cause negative respiratory effects. This data was sourced from the EPA’s Office of Air Quality Planning and Standards (OAQPS) in 2019. Low Income data was sourced from the US Census Bureau.
+Particulate Matter 2.5 refers to fine, inhalable particles, with diameters that are generally 2.5 micrometers and smaller. They are known to cause harmful health effects such as decreased lung function. Major causes of particle pollution include transportation and manufacturing. PM2.5 data was sourced from the EPA’s Office of Air Quality Planning and Standards (OAQPS) in 2019. Low Income data was sourced from the US Census Bureau.
 
-These two maps explore the relationship between air quality and low income status in the borough. It appears that areas with higher percentages of low income residents also have higher PM2.5 indices. Areas where this pattern is particularly distinct include the southwest Bronx as well as Census Blocks 284 and 276 (see below). Both of these areas border busy roads: the southeast Bronx, the Major Deegan and Bruckner Expressways, and the two census blocks the Hutchinson Parkway. Therefore, the suggested findings of these map corroborate the environmental justice issue of infrastructure that contributes to low air quality -- such as roads and highways -- being built and present in areas with high low income residents, who may not have the resources to fight for their right to healthy air quality.
+These two maps explore the relationship between air quality and low income status in the borough. It appears that areas with higher percentages of low income residents also have higher PM2.5 indices. Areas where this pattern is particularly distinct include the southwest Bronx as well as Census Blocks 284 and 276 (see below). Both of these areas border busy roads: the southeast Bronx is bordered by the Major Deegan and Bruckner Expressways, and the two census blocks by the Hutchinson Parkway. Therefore, the suggested findings of these map corroborate the environmental justice issue of infrastructure that contributes to low air quality -- such as roads and highways -- being built and present in areas with high low income residents, who may not have the resources to fight for their right to healthy air quality.
 
-![Map of The Bronx, New York showing the areas of interests discussed.](images/Screenshot%202025-10-04%20at%2010.26.58%20PM.jpeg)
+![Map of The Bronx, New York showing the areas of interests discussed.](images/the%20bronx,%20ny-01.png){width="500"}
 
-Code for the base map:
+Code for the base map used for the image above:
 
 ```{r}
+#|output: false
 tm_shape(bronx) +
   tm_polygons(fill = "ivory") +
   tm_title(text = "The Bronx, NY") +
@@ -92,3 +101,5 @@ tm_shape(bronx) +
   tm_scalebar() +
   tm_layout(bg.color = "grey97")
 ```
+
+Source: https://www.nyc.gov/assets/planning/download/pdf/about/publications/maps/bx-census-tracts-map.pdf
