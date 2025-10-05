@@ -23,7 +23,7 @@ library(dplyr)
 ## Reading in and Wrangling of Data
 
 ```{r}
-# Using sf package to read in geodatabase of EJScreen data at the Census Block Group level
+# Reading in geodatabase of EJScreen data at the Census Block Group level
 ejscreen <- st_read(here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"))
 ```
 
@@ -45,10 +45,10 @@ dim(bronx)
 
 ## Mapping
 
-Mapping PM2.5 Concentration
+#### PM2.5 Concentration
 
 ```{r}
-# Using the tmap package to map the 'D2_PM25' column of the bronx data frame
+# Mapping bronx dataframe, using the 'D2_PM25' column as fill
 tm_shape(bronx) +
   tm_fill("D2_PM25",
           fill.legend = tm_legend(title = "PM2.5 EJ Index"),
@@ -58,8 +58,9 @@ tm_shape(bronx) +
   tm_scalebar() +
   tm_layout(bg.color = "grey97")
 ```
+The **EJ Index** combines PM2.5 Concentration with demographic indices to calculate a percentile which indicates the contribution to disparity in PM2.5 Concentration. Specifically, being in the 80-100th percentile in this map suggests that that Census Block is one of the highest contributors to disparity in PM2.5 Concentration between the local population's demographic and the national average. 
 
-Mapping Low Income Percentage
+#### Low Income Percentage
 
 ```{r}
 # Mutating the low income percentage column ('LOWINPCT')
@@ -69,7 +70,7 @@ bronx$LOWINCPCT <- bronx$LOWINCPCT * 100
 ```
 
 ```{r}
-# Using the tmap package to map the mutated 'LOWINCPCT' column of the bronx data frame
+# Mapping bronx dataframe, using the mutated 'LOWINCPCT' column as fill
 tm_shape(bronx) +
   tm_fill("LOWINCPCT",
           fill.legend = tm_legend(title = "% Low Income"),
@@ -86,7 +87,7 @@ These maps provide visualizations of EJ Screen's environmental justice data at a
 
 Particulate Matter 2.5 refers to fine, inhalable particles, with diameters that are generally 2.5 micrometers and smaller. They are known to cause harmful health effects such as decreased lung function. Major causes of particle pollution include transportation and manufacturing. PM2.5 data was sourced from the EPA’s Office of Air Quality Planning and Standards (OAQPS) in 2019. Low Income data was sourced from the US Census Bureau.
 
-These two maps explore the relationship between air quality and low income status in the borough. It appears that areas with higher percentages of low income residents also have higher PM2.5 indices. Areas where this pattern is particularly distinct include the southwest Bronx as well as Census Blocks 284 and 276 (see below). Both of these areas border busy roads: the southeast Bronx is bordered by the Major Deegan and Bruckner Expressways, and the two census blocks by the Hutchinson Parkway. Therefore, the suggested findings of these map corroborate the environmental justice issue of infrastructure that contributes to low air quality -- such as roads and highways -- being built and present in areas with high low income residents, who may not have the resources to fight for their right to healthy air quality.
+These two maps explore the relationship between air quality and low income status in the borough. It appears that areas with higher percentages of low income residents also have higher PM2.5 indices. In other words, areas with higher percentages of low income Bronx residents contribute the most to the disparity in air quality between low income residents and the national average. This pattern is particularly distinct in the southwest Bronx as well as Census Blocks 284 and 276 (see below). Both of these areas border busy roads: the southwest Bronx is bordered by the Major Deegan and Bruckner Expressways, and the two census blocks by the Hutchinson Parkway. Therefore, the suggested findings of these map corroborate the environmental justice issue of infrastructure that contributes to low air quality -- such as roads and highways -- being built and present in areas with many low income residents, who may not have the resources to fight for their right to healthy air quality. As indicated by the EJ Index, this issue is particularly prevalent in The Bronx compared to the national average.
 
 ![Map of The Bronx, New York showing the areas of interests discussed.](images/the%20bronx,%20ny-01.png){width="500"}
 
