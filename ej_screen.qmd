@@ -3,90 +3,92 @@ title: "EDS223 Homework 1"
 author: "Sofia Sarak"
 format: pdf
 editor: visual
+execute:
+  messages: false
 ---
 
+### Loading in Necessary Packages
+
 ```{r}
+#| messages: false
 library(tidyverse)
 library(sf)
 library(here)
 library(tmap)
+library(dplyr)
 ```
 
+## Wrangling of Data
 
 ```{r}
-# read in geodatabase of EJScreen data at the Census Block Group level
+# Using sf package to read in geodatabase of EJScreen data at the Census Block Group level
 ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"))
 ```
 
-
 ```{r}
-# filter to a state you are interested in
-ct <- ejscreen %>%
-  dplyr::filter(ST_ABBREV == "CT")
-```
-
-
-```{r}
-# filter to a county you are interested in
-fairfield <- ejscreen %>%
-  dplyr::filter(CNTY_NAME %in% c("Fairfield County"))
-```
-
-
-```{r}
-# find the average values for all variables within counties
-ct_counties <- aggregate(ct, by = list(ct$CNTY_NAME), FUN = mean, na.rm = TRUE)
-
-```
-
-
-
-```{r}
-
-
-tm_shape(ct) +
-  tm_fill("PEOPCOLORPCT")
-```
-
-```{r}
-tm_shape(ct) +
-  tm_fill("RSEI_AIR")
-```
-```{r}
-nh <- ejscreen %>%
-  dplyr::filter(CNTY_NAME %in% c("New Haven County"))
-```
-
-```{r}
-tm_shape(nh) +
-  tm_fill("RSEI_AIR")
-```
-```{r}
-tm_shape(nh) +
-  tm_fill("PEOPCOLORPCT")
-```
-
-```{r}
+# Filtering for New York data
 ny <- ejscreen %>%
-  dplyr::filter(ST_ABBREV == "NY")
+  filter(ST_ABBREV == "NY")
 ```
 
 ```{r}
+# Filtering for Bronx County data
 bronx <- ejscreen %>%
-  dplyr::filter(CNTY_NAME %in% c("Bronx County"))
+  filter(CNTY_NAME %in% c("Bronx County"))
+
+# Ensuring our filtering worked! (Can also run head(bronx) in the console)
+unique(bronx$CNTY_NAME)
+dim(bronx)
+```
+
+## Mapping
+
+```{r}
+tm_shape(bronx) +
+  tm_fill("D2_PM25",
+          fill.legend = tm_legend(title = "PM2.5 EJ Index"),
+          fill.scale = tm_scale(values = c("beige", "brown"))) +
+  tm_title(text = "PM2.5 Concentration in The Bronx, NY") +
+  tm_compass(size = 1.5) +
+  tm_scalebar() +
+  tm_layout(bg.color = "grey97")
+```
+
+```{r}
+# Mutating the low income percentage column ('LOWINPCT')
+# As the current values are proportions, not percentages
+
+bronx$LOWINCPCT <- bronx$LOWINCPCT * 100
 ```
 
 ```{r}
 tm_shape(bronx) +
-  tm_fill("PEOPCOLORPCT")
+  tm_fill("LOWINCPCT",
+          fill.legend = tm_legend(title = "% Low Income"),
+          fill.scale = tm_scale(values = c("#d4e3fa", "steelblue4"))) +
+  tm_title(text = "Low Income Percentage in The Bronx, NY") +
+  tm_compass(size = 1.5) +
+  tm_scalebar() +
+  tm_layout(bg.color = "grey97")
 ```
+
+## What do these maps tell us?
+
+These maps provide visualizations of EJ Screen's environmental justice data at a Census Block Group Level (which are the delineations visible in each map). The area of interest -- The Bronx, New York -- is one of the five boroughs of New York City; it contains the poorest congressional district in the United States and has recently experienced threats to it environmental justice funding ([Seattle Times article](https://www.seattletimes.com/business/in-the-bronx-the-nations-poorest-congressional-district-federal-funding-cuts-create-perfect-storm/#:~:text=Why%20the%20Bronx%20bears%20the,support%20just%20gets%20yanked%20away.%E2%80%9D)). Here, we have plotted particulate matter 2.5 concentrations and the percentage of low income residents in the area.
+
+Particulate Matter 2.5 is the \_\_\_\_, and is known to cause negative respiratory effects. This data was sourced from the EPA’s Office of Air Quality Planning and Standards (OAQPS) in 2019. Low Income data was sourced from the US Census Bureau.
+
+These two maps explore the relationship between air quality and low income status in the borough. It appears that areas with higher percentages of low income residents also have higher PM2.5 indices. Areas where this pattern is particularly distinct include the southwest Bronx as well as Census Blocks 284 and 276 (see below). Both of these areas border busy roads: the southeast Bronx, the Major Deegan and Bruckner Expressways, and the two census blocks the Hutchinson Parkway. Therefore, the suggested findings of these map corroborate the environmental justice issue of infrastructure that contributes to low air quality -- such as roads and highways -- being built and present in areas with high low income residents, who may not have the resources to fight for their right to healthy air quality.
+
+![Map of The Bronx, New York showing the areas of interests discussed.](images/Screenshot%202025-10-04%20at%2010.26.58%20PM.jpeg)
+
+Code for the base map:
 
 ```{r}
 tm_shape(bronx) +
-  tm_fill("D2_PM25")
+  tm_polygons(fill = "ivory") +
+  tm_title(text = "The Bronx, NY") +
+  tm_compass(size = 1.5) +
+  tm_scalebar() +
+  tm_layout(bg.color = "grey97")
 ```
-```{r}
-tm_shape(bronx) +
-  tm_fill("LOWINCPCT")
-```
-
