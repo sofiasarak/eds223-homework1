@@ -1,4 +1,4 @@
-# EDS223 - Homework1
+# EDS223 Homework 1: Environmental Justice in The Bronx, NY
 
 This repository contains the response to Homework 1 in EDS223 - *Geospatial Analysis & Remote Sensing*, completed by Sofia Sarak.
 
