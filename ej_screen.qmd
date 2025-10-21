@@ -1,10 +1,15 @@
 ---
-title: "EDS223 Homework 1"
+title: "Homework 1: Environmental Justice in The Bronx, NY"
 author: "Sofia Sarak"
+date: "October 6, 2025"
 format: pdf
 editor: visual
 execute:
   messages: false
+  warning: false
+knitr: 
+  opts_chunk:
+    message: false
 ---
 
 The following document contains visualizations of environmental justice issues in The Bronx, New York.
@@ -12,7 +17,6 @@ The following document contains visualizations of environmental justice issues i
 ### Loading in Necessary Packages
 
 ```{r}
-#| messages: false
 library(tidyverse)
 library(sf)
 library(here)
@@ -23,6 +27,7 @@ library(dplyr)
 ## Reading in and Wrangling of Data
 
 ```{r}
+#| output: false
 # Reading in geodatabase of EJScreen data at the Census Block Group level
 ejscreen <- st_read(here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"))
 ```
@@ -94,7 +99,7 @@ These two maps explore the relationship between air quality and low income statu
 Code for the base map used for the image above:
 
 ```{r}
-#|output: false
+#| output: false
 tm_shape(bronx) +
   tm_polygons(fill = "ivory") +
   tm_title(text = "The Bronx, NY") +
