@@ -14,6 +14,10 @@ knitr:
 
 The following document contains visualizations of environmental justice issues in The Bronx, New York.
 
+**README** (for grading purposes)
+
+![](images/READMEhw1.png){width="563"}
+
 ### Loading in Necessary Packages
 
 ```{r}
@@ -63,7 +67,8 @@ tm_shape(bronx) +
   tm_scalebar() +
   tm_layout(bg.color = "grey97")
 ```
-The **EJ Index** combines PM2.5 Concentration with demographic indices to calculate a percentile which indicates the contribution to disparity in PM2.5 Concentration. Specifically, being in the 80-100th percentile in this map suggests that that Census Block is one of the highest contributors to disparity in PM2.5 Concentration between the local population's demographic and the national average. 
+
+The **EJ Index** combines PM2.5 Concentration with demographic indices to calculate a percentile which indicates the contribution to disparity in PM2.5 Concentration. Specifically, being in the 80-100th percentile in this map suggests that that Census Block is one of the highest contributors to disparity in PM2.5 Concentration between the local population's demographic and the national average.
 
 #### Low Income Percentage
 
